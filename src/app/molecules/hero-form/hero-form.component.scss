@@ -1,0 +1,74 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &:last-child {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+  }
+
+  label,
+  legend {
+    color: #dad6cf;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  textarea,
+  input {
+    width: 100%;
+    min-height: 38px;
+    border: 1px solid #202020;
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #202020;
+    font: inherit;
+    background: linear-gradient(180deg, #f5f2ec 0%, #dad6cf 56%, #c3beb5 100%), #dad6cf;
+    outline: none;
+
+    &:focus {
+      border-color: #fc3636;
+      box-shadow: 0 0 0 2px rgba(252, 54, 54, 0.22);
+    }
+  }
+
+  textarea {
+    min-height: 92px;
+    resize: vertical;
+  }
+
+  span {
+    color: #ff7a7a;
+    font-size: 13px;
+  }
+
+  fieldset {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 0;
+    border: 1px solid rgba(218, 214, 207, 0.28);
+    border-radius: 8px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.06);
+
+    legend {
+      padding: 0 8px;
+    }
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+}

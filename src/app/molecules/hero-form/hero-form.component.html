@@ -1,0 +1,91 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <app-input
+    label="Hero name"
+    inputId="hero-name"
+    [uppercase]="true"
+    [control]="form.controls.name"
+    placeholder="e.g. SPIDER-MAN"
+    [error]="
+      form.controls.name.invalid && (form.controls.name.dirty || form.controls.name.touched)
+        ? 'Required, 3-100 characters.'
+        : ''
+    "
+  />
+
+  <app-input
+    label="Alter ego"
+    inputId="hero-alter"
+    [control]="form.controls.alterEgo"
+    placeholder="e.g. Peter Parker"
+    [error]="
+      form.controls.alterEgo.invalid &&
+      (form.controls.alterEgo.dirty || form.controls.alterEgo.touched)
+        ? 'Alter ego is required.'
+        : ''
+    "
+  />
+
+  <app-select
+    label="Universe"
+    selectId="hero-universe"
+    [control]="form.controls.universe"
+    [options]="universeOptions"
+  />
+
+  <div>
+    <label for="hero-desc">Description</label>
+    <textarea id="hero-desc" formControlName="description" rows="4"></textarea>
+    @if (
+      form.controls.description.invalid &&
+      (form.controls.description.dirty || form.controls.description.touched)
+    ) {
+      <span>Required, min 10 characters.</span>
+    }
+  </div>
+
+  <app-input
+    label="Image URL"
+    inputId="hero-img"
+    [control]="form.controls.imageUrl"
+    placeholder="https://..."
+    [error]="
+      form.controls.imageUrl.invalid &&
+      (form.controls.imageUrl.dirty || form.controls.imageUrl.touched)
+        ? 'Required.'
+        : ''
+    "
+  />
+
+  <fieldset>
+    <legend>Abilities</legend>
+    <div>
+      <label for="hero-intelligence">Intelligence</label>
+      <input id="hero-intelligence" type="number" min="0" max="100" formControlName="intelligence" />
+    </div>
+    <div>
+      <label for="hero-strength">Strength</label>
+      <input id="hero-strength" type="number" min="0" max="100" formControlName="strength" />
+    </div>
+    <div>
+      <label for="hero-speed">Speed</label>
+      <input id="hero-speed" type="number" min="0" max="100" formControlName="speed" />
+    </div>
+    <div>
+      <label for="hero-durability">Durability</label>
+      <input id="hero-durability" type="number" min="0" max="100" formControlName="durability" />
+    </div>
+    <div>
+      <label for="hero-power">Power</label>
+      <input id="hero-power" type="number" min="0" max="100" formControlName="power" />
+    </div>
+    <div>
+      <label for="hero-combat">Combat</label>
+      <input id="hero-combat" type="number" min="0" max="100" formControlName="combat" />
+    </div>
+  </fieldset>
+
+  <div>
+    <app-button type="submit" variant="primary" [disabled]="form.invalid">Save</app-button>
+    <app-button type="button" variant="secondary" (clicked)="onCancel()">Cancel</app-button>
+  </div>
+</form>

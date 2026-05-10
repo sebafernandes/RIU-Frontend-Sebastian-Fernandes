@@ -1,0 +1,29 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+
+  button {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  > div {
+    min-height: 460px;
+    border: 8px solid #dad6cf;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #3a3a3a 0%, #57534d 45%, #3a3a3a 90%);
+    background-size: 220% 100%;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  to {
+    background-position: -220% 0;
+  }
+}

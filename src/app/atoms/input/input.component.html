@@ -1,0 +1,22 @@
+@if (label()) {
+  <label [attr.for]="inputId()">{{ label() }}</label>
+}
+@if (uppercase()) {
+  <input
+    [attr.id]="inputId()"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [formControl]="control()"
+    appUppercaseInput
+  />
+} @else {
+  <input
+    [attr.id]="inputId()"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [formControl]="control()"
+  />
+}
+@if (error()) {
+  <span>{{ error() }}</span>
+}

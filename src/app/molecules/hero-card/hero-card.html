@@ -1,0 +1,52 @@
+@if (hero(); as h) {
+  <div class="card">
+    @if (h.source === 'local') {
+      <span>New</span>
+    }
+    <div class="cardFront">
+      <div class="imageWrapper">
+        <img [src]="h.imageUrl" [alt]="h.name" />
+      </div>
+      <div class="cardBody">
+        @if (h.alterEgo) {
+          <h4>{{ h.alterEgo }}</h4>
+        }
+        <h3>{{ h.name }}</h3>
+        <div class="heroPower">
+          <span>{{ averageScore() }}</span>
+          <p>Average score</p>
+        </div>
+        @if (h.description) {
+          <p>{{ h.description }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="cardBack">
+      <div>
+        <p>Strength</p>
+        <p>{{ h.powerstats.strength }}</p>
+      </div>
+      <div>
+        <p>Intelligence</p>
+        <p>{{ h.powerstats.intelligence }}</p>
+      </div>
+      <div>
+        <p>Speed</p>
+        <p>{{ h.powerstats.speed }}</p>
+      </div>
+      <div>
+        <p>Durability</p>
+        <p>{{ h.powerstats.durability }}</p>
+      </div>
+      <div>
+        <p>Power</p>
+        <p>{{ h.powerstats.power }}</p>
+      </div>
+      <div>
+        <p>Combat</p>
+        <p>{{ h.powerstats.combat }}</p>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,31 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border: 1px solid #202020;
+  border-radius: 4px;
+  padding: 8px 14px;
+  color: #202020;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #f5f2ec 0%, #dad6cf 56%, #c3beb5 100%), #dad6cf;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &--danger {
+    color: #f5f2ec;
+    background: #9f1d25;
+  }
+
+  &--ghost {
+    color: #dad6cf;
+    border-color: rgba(218, 214, 207, 0.32);
+    background: transparent;
+  }
+}

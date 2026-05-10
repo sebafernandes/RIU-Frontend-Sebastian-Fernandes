@@ -1,0 +1,13 @@
+<div class="pg">
+  <span class="pg__info"
+    >Page {{ page() }} / {{ totalPages() }} · {{ totalItems() }} heroes</span
+  >
+  <div class="pg__btns">
+    <app-button variant="secondary" [disabled]="!canPrev()" (clicked)="prev()"
+      >Previous</app-button
+    >
+    <app-button variant="secondary" [disabled]="!canNext()" (clicked)="next()"
+      >Next</app-button
+    >
+  </div>
+</div>

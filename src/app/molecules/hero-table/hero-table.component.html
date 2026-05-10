@@ -1,0 +1,14 @@
+<div class="grid">
+  @if (loading()) {
+    @for (_ of skeletonItems(); track $index) {
+      <div></div>
+    }
+  } @else {
+    @for (hero of heroes(); track hero.id) {
+      <button type="button" (click)="view.emit(hero)">
+        <app-hero-card [hero]="hero" />
+      </button>
+      
+    }
+  }
+</div>

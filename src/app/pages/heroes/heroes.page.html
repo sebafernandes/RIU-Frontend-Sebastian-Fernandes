@@ -1,0 +1,70 @@
+<section class="pageWrapper">
+  <main>
+    <div class="topRow">
+      <h2>List of heroes</h2>
+      <button type="button" (click)="openEditor('create')">Add hero</button>
+    </div>
+    <div class="bottomRow">
+      <input type="text" placeholder="Search by name" (input)="onSearchInput($event)" />
+      <div class="rightRow">
+        <div class="selectWrapper">
+          <select
+            name="pageSize"
+            id="pageSize"
+            [value]="pageSizeNum()"
+            (change)="onPageSizeChange($event)"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+        <div class="selectWrapper">
+          <select
+            name="sortMode"
+            id="sortMode"
+            [value]="sortMode()"
+            (change)="onSortChange($event)"
+          >
+            <option value="name-asc">Name A–Z</option>
+            <option value="name-desc">Name Z–A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="gridWrapper">
+      <app-hero-table
+        [heroes]="pagedHeroes()"
+        [loading]="tableLoading()"
+        [skeletonCount]="pageSizeNum()"
+        (view)="openView($event, 'view')"
+        (edit)="openEditor('edit', $event)"
+        (remove)="onTableDelete($event)"
+      />
+    </div>
+
+    <app-pagination
+      [totalItems]="listedHeroes().length"
+      [pageSize]="pageSizeNum()"
+      [page]="page()"
+      (pageChange)="setPage($event)"
+    />
+  </main>
+</section>
+
+<app-hero-sidebar
+  [open]="sidebarOpen()"
+  [mode]="sidebarMode()"
+  [hero]="sidebarHero()"
+  (closed)="closeSidebar()"
+  (edit)="onSidebarEdit()"
+  (deleteConfirmed)="onSidebarDelete($event)"
+/>
+
+<app-hero-editor-modal
+  [open]="editorOpen()"
+  [mode]="editorMode()"
+  [hero]="editorHero()"
+  (closed)="closeEditor()"
+  (saved)="onFormSaved($event)"
+/>

@@ -1,0 +1,11 @@
+@if (label()) {
+  <label [attr.for]="selectId()">{{ label() }}</label>
+}
+<select [attr.id]="selectId()" [formControl]="control()">
+  @for (opt of options(); track opt.value) {
+    <option [value]="opt.value">{{ opt.label }}</option>
+  }
+</select>
+@if (error()) {
+  <span>{{ error() }}</span>
+}

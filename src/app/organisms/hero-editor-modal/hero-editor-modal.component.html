@@ -1,0 +1,17 @@
+@if (open()) {
+  <div>
+    <button type="button" (click)="close()"></button>
+    <section>
+      <div>
+        <h2>{{ mode() === 'edit' ? 'Edit hero' : 'New hero' }}</h2>
+        <button type="button" (click)="close()">Close</button>
+      </div>
+
+      <app-hero-form
+        [hero]="mode() === 'edit' ? hero() : null"
+        (saved)="save($event)"
+        (cancelled)="close()"
+      />
+    </section>
+  </div>
+}

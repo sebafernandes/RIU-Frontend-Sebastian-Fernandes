@@ -1,0 +1,53 @@
+@if (open()) {
+  <div>
+    <button type="button" (click)="close()"></button>
+    <aside>
+      <div>
+        <h2>Hero detail</h2>
+        <app-button variant="ghost" (clicked)="close()">Close</app-button>
+      </div>
+
+      <div>
+        @if (hero(); as h) {
+          @if (confirmDelete()) {
+            <div class="card">
+              <p>Delete {{ h.name }}? This cannot be undone.</p>
+              <div>
+                <app-button variant="danger" (clicked)="onConfirmDelete()">Delete</app-button>
+                <app-button variant="secondary" (clicked)="setConfirmDelete(false)">Cancel</app-button>
+              </div>
+            </div>
+          } @else {
+            <div>
+              <img [src]="h.imageUrl" alt="" />
+              <dl>
+                <dt>Name</dt>
+                <dd>{{ h.name }}</dd>
+                @if (h.alterEgo) {
+                  <dt>Alter ego</dt>
+                  <dd>{{ h.alterEgo }}</dd>
+                }
+                <dt>Universe</dt>
+                <dd>{{ h.universe }}</dd>
+                <dt>Power</dt>
+                <dd>{{ h.power }}</dd>
+                @if (h.description) {
+                  <dt>Description</dt>
+                  <dd>{{ h.description }}</dd>
+                }
+                <dt>Created</dt>
+                <dd>{{ h.createdAt | date: 'medium' }}</dd>
+                <dt>Updated</dt>
+                <dd>{{ h.updatedAt | date: 'medium' }}</dd>
+              </dl>
+              <div>
+                <app-button variant="primary" (clicked)="onEdit()">Edit</app-button>
+                <app-button variant="danger" (clicked)="setConfirmDelete(true)">Delete</app-button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </aside>
+  </div>
+}
