@@ -35,7 +35,7 @@
     <div class="gridWrapper">
       <app-hero-table
         [heroes]="pagedHeroes()"
-        [loading]="tableLoading()"
+        [loading]="isLoading()"
         [skeletonCount]="pageSizeNum()"
         (view)="openView($event, 'view')"
         (edit)="openEditor('edit', $event)"

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { take, finalize } from 'rxjs';
 import type { CreateHeroDto, Hero } from '@app/models/hero.model';
 import { HeroService } from '@app/services/hero.service';
+import { LoadingService } from '@app/services/loading.service';
 import type { SelectOption } from '@app/atoms/select/select.component';
 import { PaginationComponent } from '@app/molecules/pagination/pagination.component';
 import { HeroTableComponent } from '@app/molecules/hero-table/hero-table.component';
@@ -43,6 +44,7 @@ function sortHeroes(list: Hero[], mode: HeroSortMode): Hero[] {
 })
 export class HeroesPage {
   private heroService = inject(HeroService);
+  private loadingService = inject(LoadingService);
 
   pageSizeOptions: SelectOption[] = [
     { value: '10', label: '10 per page' },
@@ -62,6 +64,7 @@ export class HeroesPage {
   searchTerm = signal('');
   page = signal(1);
   tableLoading = signal(true);
+  isLoading = computed(() => this.tableLoading() || this.loadingService.loading());
 
   sidebarOpen = signal(false);
   sidebarMode = signal<HeroSidebarMode>('view');
