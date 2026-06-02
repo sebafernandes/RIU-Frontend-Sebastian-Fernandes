@@ -72,7 +72,7 @@ export class HeroesPage {
 
   listedHeroes = computed(() => {
     const locals = this.heroes().filter((h) => h.source === 'local');
-    const api = this.heroes().filter((h) => h.source === 'api');
+    const api = this.heroes().filter((h) => h.source === 'api' || h.source === 'seed');
     const mode = this.sortMode();
     return [...sortHeroes(locals, mode), ...sortHeroes(api, mode)];
   });

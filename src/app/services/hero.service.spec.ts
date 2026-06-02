@@ -21,30 +21,14 @@ function mockApiHero(partial?: Partial<SuperheroApiHero>): SuperheroApiHero {
   return {
     id: 1,
     name: 'Spider-Man',
-    slug: '1-spider-man',
     powerstats: { ...powerstats },
     biography: {
       fullName: 'Peter Parker',
       alterEgos: '',
       publisher: 'Marvel Comics',
-      aliases: [],
-      placeOfBirth: 'Queens, New York',
       firstAppearance: '1962',
-      alignment: 'good',
     },
-    appearance: {
-      gender: 'Male',
-      race: 'Human',
-      height: ["5'10", '178 cm'],
-      weight: ['167 lb', '75 kg'],
-      eyeColor: 'Hazel',
-      hairColor: 'Brown',
-    },
-    work: { occupation: 'Student', base: 'New York' },
-    connections: {
-      groupAffiliation: 'Avengers',
-      relatives: 'May Parker (aunt)',
-    },
+    work: { occupation: 'Student' },
     images: {
       xs: 'https://example.com/spidey-xs.png',
       sm: 'https://example.com/spidey-sm.png',
@@ -79,6 +63,17 @@ describe('HeroService', () => {
     req.flush([mockApiHero(), mockApiHero({ id: 2, name: 'Batman' })]);
     const list = await p;
     expect(list.length).toBe(2);
+  });
+
+  it('returns fallback heroes when API fails', async () => {
+    const svc = TestBed.inject(HeroService);
+    const p = firstValueFrom(svc.getAll());
+    const req = http.expectOne(API_ALL);
+    req.flush('error', { status: 500, statusText: 'Server Error' });
+    const list = await p;
+    expect(list.length).toBeGreaterThan(0);
+    expect(list.some((h) => h.name === 'SPIDER-MAN')).toBe(true);
+    expect(list.every((h) => h.source === 'seed')).toBe(true);
   });
 
   it('searchByName is case-insensitive (cold cache)', async () => {
@@ -133,12 +128,22 @@ describe('HeroService', () => {
     expect(after.createdAt.getTime()).toBe(before.createdAt.getTime());
   });
 
+  it('update errors when hero does not exist', async () => {
+    const svc = TestBed.inject(HeroService);
+    const load = firstValueFrom(svc.getAll());
+    http.expectOne(API_ALL).flush([mockApiHero({ id: 1 })]);
+    await load;
+    const p = expect(firstValueFrom(svc.update('missing', { name: 'ghost' }))).rejects.toThrow(
+      'Hero not found',
+    );
+    await vi.advanceTimersByTimeAsync(450);
+    await p;
+  });
+
   it('delete removes hero', async () => {
     const svc = TestBed.inject(HeroService);
     const load = firstValueFrom(svc.getAll());
-    http
-      .expectOne(API_ALL)
-      .flush([mockApiHero({ id: 1 }), mockApiHero({ id: 2, name: 'Other' })]);
+    http.expectOne(API_ALL).flush([mockApiHero({ id: 1 }), mockApiHero({ id: 2, name: 'Other' })]);
     await load;
     const p = firstValueFrom(svc.delete('2'));
     await vi.advanceTimersByTimeAsync(450);

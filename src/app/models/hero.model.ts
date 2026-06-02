@@ -1,13 +1,19 @@
-import type { SuperheroApiHero, SuperheroApiPowerstats } from '@app/models/superhero-api.model';
-
 export type HeroUniverse = 'Marvel' | 'DC' | 'Other';
 
-export type HeroSource = 'api' | 'local';
+export type HeroSource = 'api' | 'seed' | 'local';
+
+export interface HeroPowerstats {
+  intelligence: number;
+  strength: number;
+  speed: number;
+  durability: number;
+  power: number;
+  combat: number;
+}
 
 export interface Hero {
   id: string;
   name: string;
-  slug?: string;
   power: string;
   alterEgo?: string;
   universe: HeroUniverse;
@@ -16,8 +22,7 @@ export interface Hero {
   source: HeroSource;
   createdAt: Date;
   updatedAt: Date;
-  powerstats: SuperheroApiPowerstats;
-  apiHero?: SuperheroApiHero;
+  powerstats: HeroPowerstats;
 }
 
 export type CreateHeroDto = Omit<
@@ -29,5 +34,3 @@ export type CreateHeroDto = Omit<
 };
 
 export type UpdateHeroDto = Partial<CreateHeroDto>;
-
-export type { SuperheroApiHero, SuperheroApiPowerstats } from '@app/models/superhero-api.model';

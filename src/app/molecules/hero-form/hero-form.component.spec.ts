@@ -83,6 +83,48 @@ describe('HeroFormComponent', () => {
     });
   });
 
+  it('onSubmit does not emit when form is invalid', async () => {
+    await TestBed.configureTestingModule({
+      imports: [HeroFormComponent],
+    }).compileComponents();
+    const fx = TestBed.createComponent(HeroFormComponent);
+    fx.detectChanges();
+    let hit = false;
+    fx.componentInstance.saved.subscribe(() => {
+      hit = true;
+    });
+    fx.componentInstance.onSubmit();
+    expect(hit).toBe(false);
+  });
+
+  it('onSubmit emits edit payload for selected hero', async () => {
+    await TestBed.configureTestingModule({
+      imports: [HeroFormComponent],
+    }).compileComponents();
+    const fx = TestBed.createComponent(HeroFormComponent);
+    fx.componentRef.setInput('hero', h);
+    fx.detectChanges();
+    let payload: unknown;
+    fx.componentInstance.saved.subscribe((e) => {
+      payload = e;
+    });
+    fx.componentInstance.form.patchValue({ name: 'edited' });
+    fx.componentInstance.onSubmit();
+    expect(payload).toEqual({
+      mode: 'edit',
+      id: 'z',
+      dto: {
+        name: 'EDITED',
+        power: '50',
+        alterEgo: 'alt',
+        universe: 'DC',
+        description: '1234567890 ab',
+        imageUrl: 'https://i',
+        powerstats: { ...powerstats },
+      },
+    });
+  });
+
   it('onCancel emits cancelled', async () => {
     await TestBed.configureTestingModule({
       imports: [HeroFormComponent],

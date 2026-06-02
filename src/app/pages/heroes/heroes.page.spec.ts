@@ -23,30 +23,14 @@ function mockApiHero(partial?: Partial<SuperheroApiHero>): SuperheroApiHero {
   return {
     id: 1,
     name: 'Spider-Man',
-    slug: '1-spider-man',
     powerstats: { ...powerstats },
     biography: {
       fullName: 'Peter Parker',
       alterEgos: '',
       publisher: 'Marvel Comics',
-      aliases: [],
-      placeOfBirth: 'Queens, New York',
       firstAppearance: '1962',
-      alignment: 'good',
     },
-    appearance: {
-      gender: 'Male',
-      race: 'Human',
-      height: ["5'10", '178 cm'],
-      weight: ['167 lb', '75 kg'],
-      eyeColor: 'Hazel',
-      hairColor: 'Brown',
-    },
-    work: { occupation: 'Student', base: 'New York' },
-    connections: {
-      groupAffiliation: 'Avengers',
-      relatives: 'May Parker (aunt)',
-    },
+    work: { occupation: 'Student' },
     images: {
       xs: 'https://example.com/spidey-xs.png',
       sm: 'https://example.com/spidey-sm.png',
