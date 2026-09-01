@@ -17,27 +17,26 @@ const powerstats = {
   combat: 85,
 } as const;
 
-function mockApiHero(partial?: Partial<SuperheroApiHero>): SuperheroApiHero {
+function apiHero(id: number, name: string, publisher: string): SuperheroApiHero {
   return {
-    id: 1,
-    name: 'Spider-Man',
+    id,
+    name,
     powerstats: { ...powerstats },
     biography: {
-      fullName: 'Peter Parker',
-      alterEgos: '',
-      publisher: 'Marvel Comics',
-      firstAppearance: '1962',
+      fullName: `${name} alter`,
+      alterEgos: '-',
+      firstAppearance: '-',
+      publisher,
     },
-    work: { occupation: 'Student' },
-    images: {
-      xs: 'https://example.com/spidey-xs.png',
-      sm: 'https://example.com/spidey-sm.png',
-      md: 'https://example.com/spidey.png',
-      lg: 'https://example.com/spidey-lg.png',
-    },
-    ...partial,
+    work: { occupation: 'hero' },
+    images: { xs: '', sm: '', md: `https://img.test/${id}.jpg`, lg: '' },
   };
 }
+
+const catalog: SuperheroApiHero[] = [
+  apiHero(1, 'Spider-Man', 'Marvel Comics'),
+  apiHero(2, 'Batman', 'DC Comics'),
+];
 
 describe('HeroService', () => {
   let http: HttpTestingController;
@@ -45,7 +44,7 @@ describe('HeroService', () => {
   beforeEach(() => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), HeroService],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     http = TestBed.inject(HttpTestingController);
     vi.useFakeTimers();
@@ -56,45 +55,37 @@ describe('HeroService', () => {
     vi.useRealTimers();
   });
 
-  it('returns all heroes from API on first load', async () => {
+  it('loads heroes from the Superhero API', async () => {
     const svc = TestBed.inject(HeroService);
-    const p = firstValueFrom(svc.getAll());
-    const req = http.expectOne(API_ALL);
-    req.flush([mockApiHero(), mockApiHero({ id: 2, name: 'Batman' })]);
-    const list = await p;
-    expect(list.length).toBe(2);
+    const pending = firstValueFrom(svc.getAll());
+    http.expectOne(API_ALL).flush(catalog);
+    const list = await pending;
+    expect(list.map((h) => h.name)).toEqual(['SPIDER-MAN', 'BATMAN']);
+    expect(list.every((h) => h.source === 'api')).toBe(true);
   });
 
-  it('returns fallback heroes when API fails', async () => {
+  it('falls back to seed heroes when the API fails', async () => {
     const svc = TestBed.inject(HeroService);
-    const p = firstValueFrom(svc.getAll());
-    const req = http.expectOne(API_ALL);
-    req.flush('error', { status: 500, statusText: 'Server Error' });
-    const list = await p;
-    expect(list.length).toBeGreaterThan(0);
+    const pending = firstValueFrom(svc.getAll());
+    http.expectOne(API_ALL).flush('error', { status: 500, statusText: 'Server Error' });
+    const list = await pending;
     expect(list.some((h) => h.name === 'SPIDER-MAN')).toBe(true);
     expect(list.every((h) => h.source === 'seed')).toBe(true);
   });
 
-  it('searchByName is case-insensitive (cold cache)', async () => {
+  it('searchByName is case-insensitive', async () => {
     const svc = TestBed.inject(HeroService);
-    const p = firstValueFrom(svc.searchByName('bat'));
-    const req = http.expectOne(API_ALL);
-    req.flush([
-      mockApiHero({ id: 1, name: 'Batman' }),
-      mockApiHero({ id: 2, name: 'Superman' }),
-    ]);
-    const list = await p;
-    expect(list.length).toBe(1);
-    expect(list[0].name).toBe('BATMAN');
+    const pending = firstValueFrom(svc.searchByName('bat'));
+    http.expectOne(API_ALL).flush(catalog);
+    const list = await pending;
+    expect(list.map((h) => h.name)).toEqual(['BATMAN']);
   });
 
-  it('create uppercases name and prepends local hero', async () => {
+  it('create uppercases name and prepends a local hero', async () => {
     const svc = TestBed.inject(HeroService);
-    const p = firstValueFrom(
+    const pending = firstValueFrom(
       svc.create({
         name: 'test hero',
-        power: 'flight',
         alterEgo: 'secret',
         universe: 'Other',
         description: 'Ten chars min here ok',
@@ -103,54 +94,48 @@ describe('HeroService', () => {
       }),
     );
     await vi.advanceTimersByTimeAsync(450);
-    const h = await p;
-    expect(h.name).toBe('TEST HERO');
-    expect(h.source).toBe('local');
+    const created = await pending;
+    expect(created.name).toBe('TEST HERO');
+    expect(created.source).toBe('local');
     const all = await firstValueFrom(svc.getAll());
-    expect(all[0]?.id).toBe(h.id);
-    expect(all.some((x) => x.id === h.id)).toBe(true);
-    http.expectNone(API_ALL);
+    expect(all[0]?.id).toBe(created.id);
   });
 
-  it('update uppercases name and updates updatedAt', async () => {
+  it('update uppercases name and refreshes updatedAt', async () => {
     const svc = TestBed.inject(HeroService);
     const load = firstValueFrom(svc.getAll());
-    http.expectOne(API_ALL).flush([mockApiHero({ id: 1, name: 'Web Head' })]);
+    http.expectOne(API_ALL).flush(catalog);
     await load;
-    const pBefore = firstValueFrom(svc.getById('1'));
+    const beforePending = firstValueFrom(svc.getById('1'));
     await vi.advanceTimersByTimeAsync(250);
-    const before = (await pBefore)!;
-    const p = firstValueFrom(svc.update('1', { name: 'web head' }));
+    const before = (await beforePending)!;
+    const pending = firstValueFrom(svc.update('1', { name: 'web head' }));
     await vi.advanceTimersByTimeAsync(450);
-    const after = await p;
+    const after = await pending;
     expect(after.name).toBe('WEB HEAD');
     expect(after.updatedAt.getTime()).toBeGreaterThan(before.updatedAt.getTime());
     expect(after.createdAt.getTime()).toBe(before.createdAt.getTime());
   });
 
-  it('update errors when hero does not exist', async () => {
+  it('update errors when the hero does not exist', async () => {
     const svc = TestBed.inject(HeroService);
-    const load = firstValueFrom(svc.getAll());
-    http.expectOne(API_ALL).flush([mockApiHero({ id: 1 })]);
-    await load;
-    const p = expect(firstValueFrom(svc.update('missing', { name: 'ghost' }))).rejects.toThrow(
+    const pending = expect(firstValueFrom(svc.update('missing', { name: 'ghost' }))).rejects.toThrow(
       'Hero not found',
     );
     await vi.advanceTimersByTimeAsync(450);
-    await p;
+    await pending;
   });
 
-  it('delete removes hero', async () => {
+  it('delete removes the hero', async () => {
     const svc = TestBed.inject(HeroService);
     const load = firstValueFrom(svc.getAll());
-    http.expectOne(API_ALL).flush([mockApiHero({ id: 1 }), mockApiHero({ id: 2, name: 'Other' })]);
+    http.expectOne(API_ALL).flush(catalog);
     await load;
-    const p = firstValueFrom(svc.delete('2'));
+    const pending = firstValueFrom(svc.delete('2'));
     await vi.advanceTimersByTimeAsync(450);
-    await p;
-    const p2 = firstValueFrom(svc.getById('2'));
+    await pending;
+    const lookup = firstValueFrom(svc.getById('2'));
     await vi.advanceTimersByTimeAsync(250);
-    const gone = await p2;
-    expect(gone).toBeUndefined();
+    expect(await lookup).toBeUndefined();
   });
 });

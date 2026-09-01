@@ -1,15 +1,22 @@
 @if (open()) {
   <div>
-    <button type="button" (click)="close()"></button>
-    <section>
+    <button type="button" aria-label="Close hero editor" (click)="close()"></button>
+    <section
+      appFocusOnShow
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="hero-editor-title"
+      tabindex="-1"
+      (keydown.escape)="close()"
+    >
       <div>
-        <h2>{{ mode() === 'edit' ? 'Edit hero' : 'New hero' }}</h2>
+        <h2 id="hero-editor-title">{{ mode() === 'edit' ? 'Edit hero' : 'New hero' }}</h2>
         <button type="button" (click)="close()">Close</button>
       </div>
 
       <app-hero-form
         [hero]="mode() === 'edit' ? hero() : null"
-        (saved)="save($event)"
+        (saved)="saved.emit($event)"
         (cancelled)="close()"
       />
     </section>

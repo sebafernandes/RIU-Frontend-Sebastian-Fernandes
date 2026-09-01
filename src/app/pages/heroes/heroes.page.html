@@ -5,13 +5,19 @@
       <button type="button" (click)="openEditor('create')">Add hero</button>
     </div>
     <div class="bottomRow">
-      <input type="text" placeholder="Search by name" (input)="onSearchInput($event)" />
+      <input
+        type="text"
+        placeholder="Search by name"
+        aria-label="Search heroes by name"
+        [formControl]="search"
+      />
       <div class="rightRow">
         <div class="selectWrapper">
+          <label class="sr-only" for="pageSize">Heroes per page</label>
           <select
             name="pageSize"
             id="pageSize"
-            [value]="pageSizeNum()"
+            [value]="pageSize()"
             (change)="onPageSizeChange($event)"
           >
             <option value="10">10</option>
@@ -20,12 +26,14 @@
           </select>
         </div>
         <div class="selectWrapper">
+          <label class="sr-only" for="sortMode">Sort heroes</label>
           <select
             name="sortMode"
             id="sortMode"
             [value]="sortMode()"
             (change)="onSortChange($event)"
           >
+            <option value="new-first">New first</option>
             <option value="name-asc">Name A–Z</option>
             <option value="name-desc">Name Z–A</option>
           </select>
@@ -33,28 +41,39 @@
       </div>
     </div>
     <div class="gridWrapper">
-      <app-hero-table
-        [heroes]="pagedHeroes()"
-        [loading]="isLoading()"
-        [skeletonCount]="pageSizeNum()"
-        (view)="openView($event, 'view')"
-        (edit)="openEditor('edit', $event)"
-        (remove)="onTableDelete($event)"
-      />
+      @if (isLoading() || listedHeroes().length) {
+        <app-hero-table
+          [heroes]="pagedHeroes()"
+          [loading]="isLoading()"
+          [skeletonCount]="pageSize()"
+          (view)="openView($event)"
+          (edit)="openEditor('edit', $event)"
+          (remove)="onTableDelete($event)"
+        />
+      } @else {
+        <p class="empty" role="status">
+          @if (search.value.trim()) {
+            No heroes match "{{ search.value.trim() }}".
+          } @else {
+            No heroes found.
+          }
+        </p>
+      }
     </div>
 
-    <app-pagination
-      [totalItems]="listedHeroes().length"
-      [pageSize]="pageSizeNum()"
-      [page]="page()"
-      (pageChange)="setPage($event)"
-    />
+    @if (listedHeroes().length) {
+      <app-pagination
+        [totalItems]="listedHeroes().length"
+        [pageSize]="pageSize()"
+        [page]="page()"
+        (pageChange)="setPage($event)"
+      />
+    }
   </main>
 </section>
 
 <app-hero-sidebar
   [open]="sidebarOpen()"
-  [mode]="sidebarMode()"
   [hero]="sidebarHero()"
   (closed)="closeSidebar()"
   (edit)="onSidebarEdit()"

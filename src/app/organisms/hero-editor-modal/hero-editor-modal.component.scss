@@ -7,7 +7,7 @@
     z-index: 60;
     display: grid;
     place-items: center;
-    padding: 24px;
+    padding: var(--space-2xl);
 
     > button {
       position: absolute;
@@ -20,41 +20,58 @@
     section {
       position: relative;
       z-index: 1;
-      width: min(760px, 100%);
-      max-height: calc(100dvh - 48px);
+      width: min(48rem, 100%);
+      max-height: calc(100dvh - 3rem);
       overflow-y: auto;
-      border: 8px solid #dad6cf;
-      border-radius: 8px;
+      border: 8px solid var(--color-paper);
+      border-radius: var(--radius);
       outline: 1px solid rgba(32, 32, 32, 0.48);
-      padding: 20px;
+      padding: var(--space-xl);
       background:
-        radial-gradient(circle at 18% 0%, rgba(252, 54, 54, 0.16), transparent 384px),
-        linear-gradient(180deg, #2a2a2a 0%, #202020 54%, #151515 100%),
-        #202020;
+        radial-gradient(circle at 18% 0%, rgba(252, 54, 54, 0.16), transparent 24rem),
+        linear-gradient(180deg, var(--color-bg-2) 0%, var(--color-bg-1) 54%, var(--color-bg-0) 100%),
+        var(--color-bg-1);
       box-shadow: 0 22px 48px rgba(0, 0, 0, 0.3);
 
       > div {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 20px;
+        gap: var(--space-lg);
+        margin-bottom: var(--space-xl);
 
         h2 {
           margin: 0;
-          color: #dad6cf;
+          color: var(--color-paper);
           font-size: 36px;
           font-weight: 400;
         }
 
         button {
-          border: 1px solid #202020;
-          border-radius: 4px;
-          padding: 8px 12px;
-          color: #202020;
-          background: linear-gradient(180deg, #f5f2ec 0%, #dad6cf 56%, #c3beb5 100%), #dad6cf;
+          border: 1px solid var(--color-ink);
+          border-radius: var(--radius-sm);
+          padding: var(--space-sm) var(--space-md);
+          color: var(--color-ink);
+          background: var(--surface-paper);
           cursor: pointer;
         }
+      }
+    }
+  }
+}
+
+@media (max-width: 48rem) {
+  :host > div {
+    padding: var(--space-md);
+    align-items: stretch;
+
+    section {
+      width: 100%;
+      max-height: 100dvh;
+      border-width: 4px;
+
+      > div h2 {
+        font-size: 28px;
       }
     }
   }

@@ -27,7 +27,6 @@ const seedHero = (
 ): Hero => ({
   id,
   name,
-  power: String(powerstats.power),
   alterEgo,
   universe,
   description,
@@ -52,7 +51,6 @@ function apiHeroToHero(apiHero: SuperheroApiHero): Hero {
   return {
     id: String(apiHero.id),
     name: apiHero.name.toUpperCase(),
-    power: String(apiHero.powerstats.power),
     alterEgo: biography.fullName.trim() || biography.alterEgos.trim() || undefined,
     universe: biography.publisher === 'Marvel Comics' ? 'Marvel' : 'DC',
     description: apiHero.work.occupation.trim() || biography.firstAppearance.trim() || undefined,
@@ -86,11 +84,11 @@ export class HeroService {
     return this.http.get<SuperheroApiHero[]>(API_ALL).pipe(
       map((list) => list.map(apiHeroToHero)),
       catchError(() => of(seedHeroes.map(cloneHero))),
-      tap((heroes) => {
-        this.heroes.set(heroes);
+      tap((list) => {
+        this.heroes.set(list);
         this.cacheLoaded = true;
       }),
-      map((heroes) => heroes.map(cloneHero)),
+      map((list) => list.map(cloneHero)),
     );
   }
 
@@ -127,7 +125,6 @@ export class HeroService {
       ...dto,
       id: crypto.randomUUID(),
       name: dto.name.toUpperCase(),
-      power: String(dto.powerstats.power),
       source: 'local',
       createdAt: now,
       updatedAt: now,
@@ -154,7 +151,6 @@ export class HeroService {
           ...prev,
           ...dto,
           name: dto.name !== undefined ? dto.name.toUpperCase() : prev.name,
-          power: dto.powerstats ? String(dto.powerstats.power) : dto.power ?? prev.power,
           powerstats: { ...(dto.powerstats ?? prev.powerstats) },
           id: prev.id,
           createdAt: prev.createdAt,

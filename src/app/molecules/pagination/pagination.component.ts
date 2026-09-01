@@ -21,11 +21,34 @@ export class PaginationComponent {
   readonly canPrev = computed(() => this.page() > 1);
   readonly canNext = computed(() => this.page() < this.totalPages());
 
+  readonly pages = computed(() => {
+    const total = this.totalPages();
+    const current = this.page();
+    const windowSize = 5;
+    let start = Math.max(1, current - Math.floor(windowSize / 2));
+    const end = Math.min(total, start + windowSize - 1);
+    start = Math.max(1, end - windowSize + 1);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  });
+
+  goTo(p: number): void {
+    if (p < 1 || p > this.totalPages() || p === this.page()) return;
+    this.pageChange.emit(p);
+  }
+
+  first(): void {
+    this.goTo(1);
+  }
+
   prev(): void {
-    if (this.canPrev()) this.pageChange.emit(this.page() - 1);
+    this.goTo(this.page() - 1);
   }
 
   next(): void {
-    if (this.canNext()) this.pageChange.emit(this.page() + 1);
+    this.goTo(this.page() + 1);
+  }
+
+  last(): void {
+    this.goTo(this.totalPages());
   }
 }

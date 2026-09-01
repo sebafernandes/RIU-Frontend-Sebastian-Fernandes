@@ -12,15 +12,14 @@ const powerstats = {
   combat: 60,
 } as const;
 
-const h: Hero = {
+const hero: Hero = {
   id: 'z',
   name: 'FORM',
-  power: 'pow',
   alterEgo: 'alt',
   universe: 'DC',
   description: '1234567890 ab',
   imageUrl: 'https://i',
-  source: 'api',
+  source: 'seed',
   createdAt: new Date(),
   updatedAt: new Date(),
   powerstats: { ...powerstats },
@@ -32,12 +31,12 @@ describe('HeroFormComponent', () => {
       imports: [HeroFormComponent],
     }).compileComponents();
     const fx = TestBed.createComponent(HeroFormComponent);
-    fx.componentRef.setInput('hero', h);
+    fx.componentRef.setInput('hero', hero);
     fx.detectChanges();
     expect(fx.nativeElement.querySelector('form')).toBeTruthy();
   });
 
-  it('onSubmit emits saved for valid form', async () => {
+  it('onSubmit emits saved for a valid form', async () => {
     await TestBed.configureTestingModule({
       imports: [HeroFormComponent],
     }).compileComponents();
@@ -66,7 +65,6 @@ describe('HeroFormComponent', () => {
       mode: 'create',
       dto: {
         name: 'ABC',
-        power: '5',
         alterEgo: 'alt',
         universe: 'Marvel',
         description: '1234567890',
@@ -83,7 +81,7 @@ describe('HeroFormComponent', () => {
     });
   });
 
-  it('onSubmit does not emit when form is invalid', async () => {
+  it('onSubmit does not emit when the form is invalid', async () => {
     await TestBed.configureTestingModule({
       imports: [HeroFormComponent],
     }).compileComponents();
@@ -97,12 +95,12 @@ describe('HeroFormComponent', () => {
     expect(hit).toBe(false);
   });
 
-  it('onSubmit emits edit payload for selected hero', async () => {
+  it('onSubmit emits edit payload for the selected hero', async () => {
     await TestBed.configureTestingModule({
       imports: [HeroFormComponent],
     }).compileComponents();
     const fx = TestBed.createComponent(HeroFormComponent);
-    fx.componentRef.setInput('hero', h);
+    fx.componentRef.setInput('hero', hero);
     fx.detectChanges();
     let payload: unknown;
     fx.componentInstance.saved.subscribe((e) => {
@@ -115,7 +113,6 @@ describe('HeroFormComponent', () => {
       id: 'z',
       dto: {
         name: 'EDITED',
-        power: '50',
         alterEgo: 'alt',
         universe: 'DC',
         description: '1234567890 ab',

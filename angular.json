@@ -26,7 +26,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -74,18 +76,41 @@
             "runner": "vitest",
             "buildTarget": "Riu-Frontend:build:development",
             "coverage": true,
-            "coverageReporters": ["text", "text-summary", "html", "json-summary"],
+            "coverageReporters": [
+              "text",
+              "text-summary",
+              "html",
+              "json-summary"
+            ],
             "coverageThresholds": {
               "statements": 80,
               "branches": 80,
               "functions": 80,
               "lines": 80
             },
-            "coverageInclude": ["src/app/**/*.ts"],
-            "coverageExclude": ["src/app/**/*.spec.ts"]
+            "coverageInclude": [
+              "src/app/**/*.ts"
+            ],
+            "coverageExclude": [
+              "src/app/**/*.spec.ts"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

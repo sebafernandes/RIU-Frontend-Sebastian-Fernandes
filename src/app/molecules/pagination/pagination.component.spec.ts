@@ -12,23 +12,26 @@ describe('PaginationComponent', () => {
     fx.componentRef.setInput('page', 1);
     fx.detectChanges();
     expect(fx.nativeElement.textContent).toContain('Page 1');
+    expect(fx.nativeElement.textContent).toContain('First');
+    expect(fx.nativeElement.textContent).toContain('Last');
   });
 
-  it('prev and next emit', async () => {
+  it('emits first, previous, next, last and page numbers', async () => {
     await TestBed.configureTestingModule({
       imports: [PaginationComponent],
     }).compileComponents();
     const fx = TestBed.createComponent(PaginationComponent);
-    fx.componentRef.setInput('totalItems', 12);
-    fx.componentRef.setInput('page', 1);
+    fx.componentRef.setInput('totalItems', 50);
+    fx.componentRef.setInput('pageSize', 10);
+    fx.componentRef.setInput('page', 3);
     const pages: number[] = [];
     fx.componentInstance.pageChange.subscribe((n) => pages.push(n));
     fx.detectChanges();
-    fx.componentInstance.next();
-    expect(pages).toEqual([2]);
-    fx.componentRef.setInput('page', 2);
-    fx.detectChanges();
+    fx.componentInstance.first();
     fx.componentInstance.prev();
-    expect(pages).toEqual([2, 1]);
+    fx.componentInstance.next();
+    fx.componentInstance.last();
+    fx.componentInstance.goTo(4);
+    expect(pages).toEqual([1, 2, 4, 5, 4]);
   });
 });

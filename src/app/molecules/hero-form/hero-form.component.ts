@@ -59,12 +59,12 @@ export class HeroFormComponent {
           universe: h.universe,
           description: h.description ?? '',
           imageUrl: h.imageUrl,
-          intelligence: h.powerstats?.intelligence ?? 0,
-          strength: h.powerstats?.strength ?? 0,
-          speed: h.powerstats?.speed ?? 0,
-          durability: h.powerstats?.durability ?? 0,
-          power: h.powerstats?.power ?? (Number(h.power) || 0),
-          combat: h.powerstats?.combat ?? 0,
+          intelligence: h.powerstats.intelligence,
+          strength: h.powerstats.strength,
+          speed: h.powerstats.speed,
+          durability: h.powerstats.durability,
+          power: h.powerstats.power,
+          combat: h.powerstats.combat,
         });
       } else {
         this.form.reset({
@@ -89,7 +89,6 @@ export class HeroFormComponent {
     const v = this.form.getRawValue();
     const dto: CreateHeroDto = {
       name: v.name.toUpperCase(),
-      power: String(v.power),
       alterEgo: v.alterEgo,
       universe: v.universe as HeroUniverse,
       description: v.description,

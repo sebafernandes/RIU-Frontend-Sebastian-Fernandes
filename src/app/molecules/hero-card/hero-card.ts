@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import type { Hero } from '@app/models/hero.model';
 
 @Component({
@@ -9,6 +9,7 @@ import type { Hero } from '@app/models/hero.model';
 })
 export class HeroCard {
   hero = input<Hero | null>(null);
+  flipped = signal(false);
 
   averageScore = computed(() => {
     const stats = this.hero()?.powerstats;
@@ -24,4 +25,9 @@ export class HeroCard {
         6,
     );
   });
+
+  toggleStats(event: Event): void {
+    event.stopPropagation();
+    this.flipped.update((open) => !open);
+  }
 }

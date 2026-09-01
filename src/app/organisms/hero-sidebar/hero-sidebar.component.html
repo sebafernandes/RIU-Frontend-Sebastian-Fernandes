@@ -1,9 +1,16 @@
 @if (open()) {
   <div>
-    <button type="button" (click)="close()"></button>
-    <aside>
+    <button type="button" aria-label="Close hero detail" (click)="close()"></button>
+    <aside
+      appFocusOnShow
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="hero-sidebar-title"
+      tabindex="-1"
+      (keydown.escape)="close()"
+    >
       <div>
-        <h2>Hero detail</h2>
+        <h2 id="hero-sidebar-title">Hero detail</h2>
         <app-button variant="ghost" (clicked)="close()">Close</app-button>
       </div>
 
@@ -14,12 +21,12 @@
               <p>Delete {{ h.name }}? This cannot be undone.</p>
               <div>
                 <app-button variant="danger" (clicked)="onConfirmDelete()">Delete</app-button>
-                <app-button variant="secondary" (clicked)="setConfirmDelete(false)">Cancel</app-button>
+                <app-button variant="secondary" (clicked)="confirmDelete.set(false)">Cancel</app-button>
               </div>
             </div>
           } @else {
             <div>
-              <img [src]="h.imageUrl" alt="" />
+              <img [src]="h.imageUrl" [alt]="h.name" />
               <dl>
                 <dt>Name</dt>
                 <dd>{{ h.name }}</dd>
@@ -30,7 +37,7 @@
                 <dt>Universe</dt>
                 <dd>{{ h.universe }}</dd>
                 <dt>Power</dt>
-                <dd>{{ h.power }}</dd>
+                <dd>{{ h.powerstats.power }}</dd>
                 @if (h.description) {
                   <dt>Description</dt>
                   <dd>{{ h.description }}</dd>
@@ -42,7 +49,7 @@
               </dl>
               <div>
                 <app-button variant="primary" (clicked)="onEdit()">Edit</app-button>
-                <app-button variant="danger" (clicked)="setConfirmDelete(true)">Delete</app-button>
+                <app-button variant="danger" (clicked)="confirmDelete.set(true)">Delete</app-button>
               </div>
             </div>
           }

@@ -37,7 +37,7 @@ describe('UppercaseInputDirective', () => {
     expect(fx.componentInstance.c.value).toBe('ABC');
   });
 
-  it('does not break plain input', async () => {
+  it('does not break a plain input', async () => {
     await TestBed.configureTestingModule({
       imports: [HostPlain],
     }).compileComponents();
@@ -48,5 +48,35 @@ describe('UppercaseInputDirective', () => {
     input.dispatchEvent(new Event('input'));
     fx.detectChanges();
     expect(input.value).toBe('XY');
+  });
+
+  it('uppercases pasted text', async () => {
+    await TestBed.configureTestingModule({
+      imports: [HostUpper],
+    }).compileComponents();
+    const fx = TestBed.createComponent(HostUpper);
+    fx.detectChanges();
+    const input: HTMLInputElement = fx.nativeElement.querySelector('input')!;
+    input.value = 'hello world';
+    input.dispatchEvent(new Event('input'));
+    fx.detectChanges();
+    expect(input.value).toBe('HELLO WORLD');
+    expect(fx.componentInstance.c.value).toBe('HELLO WORLD');
+  });
+
+  it('keeps the caret when editing in the middle of the value', async () => {
+    await TestBed.configureTestingModule({
+      imports: [HostUpper],
+    }).compileComponents();
+    const fx = TestBed.createComponent(HostUpper);
+    fx.detectChanges();
+    const input: HTMLInputElement = fx.nativeElement.querySelector('input')!;
+    input.value = 'abXdef';
+    input.setSelectionRange(3, 3);
+    input.dispatchEvent(new Event('input'));
+    fx.detectChanges();
+    expect(input.value).toBe('ABXDEF');
+    expect(input.selectionStart).toBe(3);
+    expect(input.selectionEnd).toBe(3);
   });
 });

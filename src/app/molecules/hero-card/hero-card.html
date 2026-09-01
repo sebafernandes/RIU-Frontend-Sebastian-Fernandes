@@ -1,8 +1,17 @@
 @if (hero(); as h) {
-  <div class="card">
+  <div class="card" [class.is-flipped]="flipped()">
     @if (h.source === 'local') {
       <span>New</span>
     }
+    <button
+      type="button"
+      class="statsToggle"
+      [attr.aria-pressed]="flipped()"
+      [attr.aria-label]="flipped() ? 'Hide stats for ' + h.name : 'Show stats for ' + h.name"
+      (click)="toggleStats($event)"
+    >
+      {{ flipped() ? 'Hide stats' : 'Show stats' }}
+    </button>
     <div class="cardFront">
       <div class="imageWrapper">
         <img [src]="h.imageUrl" [alt]="h.name" />

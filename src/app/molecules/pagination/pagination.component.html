@@ -1,13 +1,30 @@
-<div class="pg">
+<nav class="pg" aria-label="Pagination">
   <span class="pg__info"
     >Page {{ page() }} / {{ totalPages() }} · {{ totalItems() }} heroes</span
   >
   <div class="pg__btns">
+    <app-button variant="secondary" [disabled]="!canPrev()" (clicked)="first()"
+      >First</app-button
+    >
     <app-button variant="secondary" [disabled]="!canPrev()" (clicked)="prev()"
       >Previous</app-button
     >
+    @for (n of pages(); track n) {
+      <button
+        type="button"
+        class="pg__num"
+        [attr.aria-current]="n === page() ? 'page' : null"
+        [attr.aria-label]="'Go to page ' + n"
+        (click)="goTo(n)"
+      >
+        {{ n }}
+      </button>
+    }
     <app-button variant="secondary" [disabled]="!canNext()" (clicked)="next()"
       >Next</app-button
     >
+    <app-button variant="secondary" [disabled]="!canNext()" (clicked)="last()"
+      >Last</app-button
+    >
   </div>
-</div>
+</nav>

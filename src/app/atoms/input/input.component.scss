@@ -1,10 +1,10 @@
 :host {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
 
   label {
-    color: #dad6cf;
+    color: var(--color-paper);
     font-size: 14px;
     font-weight: 700;
   }
@@ -12,22 +12,22 @@
   input {
     width: 100%;
     min-height: 38px;
-    border: 1px solid #202020;
-    border-radius: 4px;
-    padding: 8px 12px;
-    color: #202020;
+    border: 1px solid var(--color-ink);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-ink);
     font: inherit;
-    background: linear-gradient(180deg, #f5f2ec 0%, #dad6cf 56%, #c3beb5 100%), #dad6cf;
+    background: var(--surface-paper);
     outline: none;
 
     &:focus {
-      border-color: #fc3636;
+      border-color: var(--color-accent);
       box-shadow: 0 0 0 2px rgba(252, 54, 54, 0.22);
     }
   }
 
   span {
-    color: #ff7a7a;
+    color: var(--color-danger-soft);
     font-size: 13px;
   }
 }

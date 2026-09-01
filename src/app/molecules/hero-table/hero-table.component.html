@@ -1,14 +1,39 @@
-<div class="grid">
+<div class="grid" role="list">
   @if (loading()) {
     @for (_ of skeletonItems(); track $index) {
-      <div></div>
+      <div class="skeleton" aria-hidden="true"></div>
     }
   } @else {
     @for (hero of heroes(); track hero.id) {
-      <button type="button" (click)="view.emit(hero)">
+      <article class="hero-item" role="listitem">
         <app-hero-card [hero]="hero" />
-      </button>
-      
+        <div class="hero-item__actions">
+          <button
+            type="button"
+            class="hero-item__view"
+            [attr.aria-label]="'View ' + hero.name"
+            (click)="view.emit(hero)"
+          >
+            View
+          </button>
+          <button
+            type="button"
+            class="hero-item__edit"
+            [attr.aria-label]="'Edit ' + hero.name"
+            (click)="edit.emit(hero)"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            class="hero-item__delete"
+            [attr.aria-label]="'Delete ' + hero.name"
+            (click)="remove.emit(hero)"
+          >
+            Delete
+          </button>
+        </div>
+      </article>
     }
   }
 </div>

@@ -1,16 +1,19 @@
 # Riu-Frontend - Superhero Manager
 
-Angular 21 SPA for browsing and maintaining a superhero roster. Hero data is loaded from the open [Superhero API](https://akabab.github.io/superhero-api/), cached in `HeroService`, with create/update/delete kept in memory on top of that list.
+Angular 21 SPA for browsing and maintaining a superhero roster.
+
+Heroes are fetched from the public Superhero API (`https://akabab.github.io/superhero-api/api/all.json`) and kept in memory. There is no backend: create, edit and delete only change that list. If the API is down, the app falls back to a small local seed.
 
 ## Stack
 
 - Angular 21
 - TypeScript 5.9
-- RxJS 7 
+- RxJS 7
 - Vitest via `@angular/build:unit-test`
 - Docker + nginx for static production (SPA fallback on refresh)
 
 ## Structure (Atomic-style)
+
 - `atoms/` — button, input, select
 - `molecules/` — hero-card, hero-table, hero-form, pagination
 - `organisms/` — hero-sidebar, hero-editor-modal
@@ -24,7 +27,7 @@ npm install
 npm start
 ```
 
-Open **http://localhost:4200/** 
+Open **http://localhost:4200/**
 
 Path alias: imports use `@app/...` (see `tsconfig.json`).
 
@@ -33,8 +36,6 @@ Path alias: imports use `@app/...` (see `tsconfig.json`).
 ```bash
 npm test
 ```
-
-Runs Vitest through the Angular CLI with coverage. Thresholds are configured in `angular.json` 
 
 ## Production build
 
